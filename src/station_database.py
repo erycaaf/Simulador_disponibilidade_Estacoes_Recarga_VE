@@ -1,6 +1,7 @@
 import json
 import os
 
+
 # Variável global para armazenar as estações em memória
 stations_db = []
 
