@@ -67,3 +67,27 @@ def simulate_status_change():
         "old_status": old_status_title,
         "new_status": new_status['Title']
     }
+<<<<<<< HEAD
+
+
+
+def get_stations_by_city(city_name: str):
+    """
+    Filtra as estações pelo nome da cidade (case insensitive).
+    """
+    results = []
+    search_term = city_name.lower().strip() # Transforma em minúsculo para facilitar a busca
+
+    for station in stations_db:
+        # Navega até o campo Town dentro de AddressInfo
+        address = station.get('AddressInfo', {})
+        town = address.get('Town')
+
+        # Se a cidade existir e o termo buscado estiver nela
+        if town and search_term in town.lower():
+            results.append(station)
+            
+    return results
+
+=======
+>>>>>>> origin/dev
