@@ -1,21 +1,17 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-﻿fastapi==0.121.3
-=======
+﻿# Backend framework
 fastapi==0.121.3
->>>>>>> origin/dev
-=======
-fastapi==0.121.3
->>>>>>> origin/dev
-folium==0.20.0
-httpx==0.28.1
-pytest==9.0.1
-requests==2.32.3
-uvicorn==0.38.0
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/dev
-=======
->>>>>>> origin/dev
+# Web server for FastAPI
+uvicorn==0.32.0
+
+# HTTP client for async requests
+httpx==0.28.1
+
+# HTTP client for sync requests
+requests==2.32.3
+
+# Mapping and visualization
+folium==0.18.0
+
+# Testing framework
+pytest==8.3.5
