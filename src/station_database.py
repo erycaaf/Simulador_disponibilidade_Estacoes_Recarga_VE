@@ -67,7 +67,6 @@ def simulate_status_change():
         "old_status": old_status_title,
         "new_status": new_status['Title']
     }
-<<<<<<< HEAD
 
 
 
@@ -89,5 +88,3 @@ def get_stations_by_city(city_name: str):
             
     return results
 
-=======
->>>>>>> origin/dev

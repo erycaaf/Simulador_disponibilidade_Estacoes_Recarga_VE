@@ -12,3 +12,6 @@ __pycache__/
 # Ignorar arquivos de sistema
 .DS_Store
 Thumbs.db
+
+# Ignorar pasta de guias de resolução de issues
+issue_guides/
