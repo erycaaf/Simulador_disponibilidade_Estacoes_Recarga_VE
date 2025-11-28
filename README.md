@@ -37,6 +37,20 @@ Se necessário, atualize o arquivo `requirements.txt` para garantir que todas as
 	```bash
 	python -m src.main
 	```
+    
+## 🧪 Como Executar os Testes
+
+Para rodar os testes automatizados, defina o PYTHONPATH para o diretório do projeto:
+
+No PowerShell (Windows):
+```powershell
+$env:PYTHONPATH="."; pytest
+```
+
+No Bash (Linux/macOS):
+```bash
+PYTHONPATH=. pytest
+```
 
 ---
 
