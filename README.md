@@ -37,7 +37,35 @@ Se necessário, atualize o arquivo `requirements.txt` para garantir que todas as
 	```bash
 	python -m src.main
 	```
-    
+
+## 🐳 Executando com Docker
+O projeto possui suporte completo a Docker, garantindo que o ambiente (incluindo a compilação do módulo em C para Linux) seja configurado automaticamente.
+
+1. Construir a Imagem
+
+Este comando lê o Dockerfile, instala as dependências, compila o código C (.so) e prepara a aplicação.
+
+```bash
+docker build -t 
+simulador-disponibilidade .
+```
+
+2. Rodar o Container
+
+Inicia o servidor web dentro do container e libera a porta 8000 para acesso local.
+
+```bash
+docker run --rm -p 8000:8000 simulador-disponibilidade
+```
+--rm: Remove o container automaticamente ao desligar (limpa o ambiente).
+
+-p 8000:8000: Permite acessar a API pelo seu navegador.
+Após rodar, a API estará disponível em:
+
+Home: http://localhost:8000
+
+Documentação Interativa (Swagger): http://localhost:8000/docs
+
 ## 🧪 Como Executar os Testes
 
 Para rodar os testes automatizados, defina o PYTHONPATH para o diretório do projeto:
