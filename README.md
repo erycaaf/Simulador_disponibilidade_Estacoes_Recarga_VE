@@ -54,6 +54,28 @@ PYTHONPATH=. pytest
 
 ---
 
+## ⚡️ Integração Contínua (CI)
+
+O projeto utiliza dois workflows principais no GitHub Actions:
+
+- **Build e Lint:** Executado a cada push ou pull request. Realiza checkout do código, instala dependências, executa o lint (`flake8`) e roda os testes (`pytest`). O `PYTHONPATH` é configurado para o diretório raiz do projeto, garantindo que os imports funcionem corretamente no ambiente de CI.
+
+- **Nightly:** Executado automaticamente todas as noites às 03:00 UTC. Além dos testes, gera relatórios de cobertura (`coverage.xml`) e logs do pytest, que são disponibilizados como artefatos para download e análise posterior.
+
+### Exemplo de configuração do PYTHONPATH no workflow:
+```yaml
+env:
+	PYTHONPATH: ${{ github.workspace }}
+```
+
+### Artefatos gerados no workflow noturno:
+- `coverage.xml`: Relatório de cobertura dos testes
+- `.pytest_cache`: Logs detalhados da execução dos testes
+
+Consulte os arquivos `.github/workflows/build.yml` e `.github/workflows/nightly.yml` para detalhes e personalizações.
+
+---
+
 ## ✨ Funcionalidades
 
 * **Integração com Dados Reais:** Consome APIs públicas (como a Open Charge Map) para obter a localização e características técnicas de estações de recarga verdadeiras, usando-as como base para a simulação.
