@@ -105,10 +105,13 @@ def get_stations_by_city(city_name: str):
 def get_stations_by_status(status_name: str):
     normalized = status_name.replace("-", " ").strip().lower()
 
-    filtered = [
-        station for station in stations_db
-        if station.get("StatusType", {}).get("Title", "").strip().lower() == normalized
-    ]
+    filtered = []
+    for station in stations_db:
+        status_title = station.get("StatusType", {}).get("Title", "")
+        status_title = status_title.strip().lower()
+
+        if status_title == normalized:
+            filtered.append(station)
 
     if not filtered:
         return {
@@ -122,5 +125,6 @@ def get_stations_by_status(status_name: str):
         "count": len(filtered),
         "stations": filtered
     }
+
 
 load_data()

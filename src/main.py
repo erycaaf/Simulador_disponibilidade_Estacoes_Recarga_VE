@@ -63,7 +63,7 @@ def list_all_stations():
 
 
 @app.get("/stations/status/{status_name}")
-def read_station_by_status(status_name:str):
+def read_station_by_status(status_name:str): 
     return station_database.get_stations_by_status(status_name)
 
 
