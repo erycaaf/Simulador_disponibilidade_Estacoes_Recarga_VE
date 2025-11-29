@@ -110,6 +110,14 @@ Consulte os arquivos `.github/workflows/build.yml` e `.github/workflows/nightly.
 * **Simulação de Estado em Tempo Real:** Gerencia o ciclo de vida de cada estação, permitindo que seu status seja alterado entre 'Disponível', 'Ocupado' ou 'Em Recarga' através de chamadas de API.
 * **Cálculo de Recarga de Bateria:** Simula a evolução da carga da bateria de um veículo durante o processo de recarga, utilizando um motor de cálculo otimizado para performance.
 * **Interação via API REST:** Expõe todos os dados e funcionalidades através de endpoints claros, permitindo que sistemas externos consultem o status das estações ou interajam com a simulação.
+
+### 🧩 Como funciona a simulação
+
+* Cada estação é representada por um objeto Python (`SimulatedStation`).
+* Se o valor de potência (`Potencia`) não estiver definido nos dados, ele será preenchido automaticamente com um valor aleatório escolhido de uma lista realista de potências de carregadores (ex: 7.2, 22, 50, 150, 300 kW, etc).
+* O status inicial da estação (`Status`) também é preenchido aleatoriamente entre os valores possíveis: 'Available', 'Operational', 'Charging', 'Out of Service', caso não esteja presente nos dados.
+* A cidade da estação é extraída do campo `AddressInfo['Town']` e pode ser usada para consultas, como filtrar todas as estações de uma cidade específica.
+* Todos os atributos (potência, status, cidade, timestamps) podem ser acessados e atualizados durante a simulação, permitindo cenários dinâmicos e realistas.
 ## 🛠️ Comandos Makefile
 
 O projeto inclui um `Makefile` para facilitar tarefas comuns de desenvolvimento. Você pode usar os comandos abaixo no terminal, na raiz do projeto:
