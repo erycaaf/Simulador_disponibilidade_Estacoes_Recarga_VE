@@ -3,7 +3,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-# --- Configuração de Caminhos (Mantendo o que você já fez) ---
+# --- Configuração de Caminhos 
 # Adiciona a pasta 'src' ao caminho do Python para conseguir importar o main
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
