@@ -33,6 +33,16 @@ class SimulatedStation:
             "UpdatedAt": self.updated_at.isoformat()
         }
 
+    def copy(self):
+        return SimulatedStation(
+            id=self.id,
+            potencia=self.potencia,
+            status=self.status,
+            city=self.city,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
+
     @staticmethod
     def from_dict(data: dict):
         # Extrai cidade do campo AddressInfo['Town'] se existir

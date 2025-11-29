@@ -1,7 +1,6 @@
 import json
 import os
 import random
-from datetime import datetime
 from src.simulated_station import SimulatedStation
 
 # Variável global para armazenar as estações
