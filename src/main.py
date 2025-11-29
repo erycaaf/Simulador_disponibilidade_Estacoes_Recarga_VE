@@ -133,14 +133,15 @@ def calculate_charge(
     if connections and connections[0].get('PowerKW'):
         power_kw = connections[0]['PowerKW']
 
-    # Chama a função C
-    minutes_left = charging_engine.estimate_time(
+    # --- CORREÇÃO AQUI: Usando o novo nome da função ---
+    minutes_left = charging_engine.calculate_charging_time(
         battery_kwh, current_percent, power_kw)
+    # ---------------------------------------------------
 
     return {
         "station_id": station_id,
-        "charger_power_kw": power_kw,
-        "vehicle_battery_kwh": battery_kwh,
-        "current_charge_percent": current_percent,
-        "estimated_minutes_remaining": round(minutes_left, 2)
+        "battery_kwh": battery_kwh,
+        "current_percent": current_percent,
+        "charging_power_kw": power_kw,
+        "estimated_minutes_remaining": minutes_left
     }

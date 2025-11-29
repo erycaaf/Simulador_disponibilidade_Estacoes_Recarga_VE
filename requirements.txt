@@ -16,6 +16,7 @@ folium==0.18.0
 # Testing framework
 pytest==8.3.5
 pytest-asyncio==0.23.6
+pytest-cov
 
 # Linting
 flake8==7.0.0

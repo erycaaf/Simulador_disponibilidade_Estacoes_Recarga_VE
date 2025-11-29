@@ -18,7 +18,10 @@ POSSIBLE_STATUSES = [
 def load_data():
     """Lê o arquivo JSON e carrega na memória."""
     global stations_db
-    file_path = "data/dados_estacoes_br.json"
+
+    base_dir = os.path.dirname(__file__)
+    file_path = os.path.join(base_dir, '../data/dados_estacoes_br.json')
+    # --------------------------------------------------------
 
     if not os.path.exists(file_path):
         print("ERRO: Arquivo não encontrado!")
@@ -97,3 +100,6 @@ def get_stations_by_city(city_name: str):
             results.append(station)
 
     return results
+
+
+load_data()
