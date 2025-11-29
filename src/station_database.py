@@ -18,8 +18,7 @@ POSSIBLE_STATUSES = [
 def load_data():
     """Lê o arquivo JSON e carrega na memória."""
     global stations_db
-    
-    # --- CORREÇÃO AQUI: Use letras minúsculas (file_path) ---
+
     base_dir = os.path.dirname(__file__)
     file_path = os.path.join(base_dir, '../data/dados_estacoes_br.json')
     # --------------------------------------------------------
