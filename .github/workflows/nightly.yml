@@ -3,6 +3,7 @@ name: Nightly Test and Artifact Workflow
 on:
   schedule:
     - cron: '0 3 * * *' # Executa diariamente às 03:00 UTC
+  workflow_dispatch:
 
 jobs:
   nightly-tests:
