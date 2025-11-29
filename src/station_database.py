@@ -102,4 +102,25 @@ def get_stations_by_city(city_name: str):
     return results
 
 
+def get_stations_by_status(status_name: str):
+    normalized = status_name.replace("-", " ").strip().lower()
+
+    filtered = [
+        station for station in stations_db
+        if station.get("StatusType", {}).get("Title", "").strip().lower() == normalized
+    ]
+
+    if not filtered:
+        return {
+            "status": normalized,
+            "stations": [],
+            "message": "No stations found with this status"
+        }
+
+    return {
+        "status": normalized,
+        "count": len(filtered),
+        "stations": filtered
+    }
+
 load_data()
