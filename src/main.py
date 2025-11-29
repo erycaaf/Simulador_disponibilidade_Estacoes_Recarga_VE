@@ -62,6 +62,11 @@ def list_all_stations():
     return station_database.get_all_stations()
 
 
+@app.get("/stations/status/{status_name}")
+def read_station_by_status(status_name: str):
+    return station_database.get_stations_by_status(status_name)
+
+
 @app.get("/stations/{station_id}")
 def read_station(station_id: int):
     station = station_database.get_station_by_id(station_id)
