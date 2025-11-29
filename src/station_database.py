@@ -127,4 +127,17 @@ def get_stations_by_status(status_name: str):
     }
 
 
+def reset_simulation():
+    """
+    Restaura o banco de dados ao estado original,
+    recarregando o JSON.
+    """
+    global stations_db
+    load_data()
+    return {
+        "status": "reset_ok",
+        "total_stations": len(stations_db)
+    }
+
+
 load_data()
