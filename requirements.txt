@@ -1,0 +1,21 @@
+﻿# Backend framework
+fastapi==0.121.3
+
+# Web server for FastAPI
+uvicorn==0.32.0
+
+# HTTP client for async requests
+httpx==0.28.1
+
+# HTTP client for sync requests
+requests==2.32.3
+
+# Mapping and visualization
+folium==0.18.0
+
+# Testing framework
+pytest==8.3.5
+pytest-asyncio==0.23.6
+
+# Linting
+flake8==7.0.0

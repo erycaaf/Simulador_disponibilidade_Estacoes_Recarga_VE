@@ -1,0 +1,17 @@
+# Ignorar arquivos compilados de Python
+__pycache__/
+*.pyc
+
+# Ignorar artefatos de build (o C compilado)
+# Em SCM, versionamos o .c, mas não a .dll gerada
+*.dll
+*.exe
+*.o
+*.so
+
+# Ignorar arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar pasta de guias de resolução de issues
+issue_guides/
