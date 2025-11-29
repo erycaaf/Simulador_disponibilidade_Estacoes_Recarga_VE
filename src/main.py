@@ -145,4 +145,3 @@ def calculate_charge(
         "charging_power_kw": power_kw,
         "estimated_minutes_remaining": minutes_left
     }
-
