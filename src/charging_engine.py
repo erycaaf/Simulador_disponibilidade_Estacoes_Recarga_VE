@@ -1,63 +1,65 @@
 import ctypes
 import os
-import platform
 
-# Define o caminho base
-BASE_DIR = os.path.dirname(__file__)
 
-# Define o nome do arquivo dependendo do sistema operacional
-if os.name == 'nt':  # Windows
+# 1. Detectar o Sistema Operacional (Windows ou Linux/Mac)
+if os.name == 'nt':
     LIB_NAME = "calculator.dll"
-else:  # Linux / Mac
+else:
     LIB_NAME = "calculator.so"
 
-LIB_PATH = os.path.join(BASE_DIR, 'core_c', LIB_NAME)
+# 2. Encontrar o caminho da biblioteca
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LIB_PATH = os.path.join(BASE_DIR, "core_c", LIB_NAME)
 
-# Tenta carregar a biblioteca C
 c_lib = None
+
+# 3. Tentar carregar a biblioteca C
 try:
     if os.path.exists(LIB_PATH):
         c_lib = ctypes.CDLL(LIB_PATH)
-        # Configura os tipos de entrada e saída da função C
-        c_lib.calculate_minutes.argtypes = [
-            ctypes.c_double, ctypes.c_double, ctypes.c_double
+
+        # Configura os tipos (Input: 3 floats / Output: 1 float)
+        c_lib.calculate_charging_time.argtypes = [
+            ctypes.c_float, ctypes.c_float, ctypes.c_float
         ]
-        c_lib.calculate_minutes.restype = ctypes.c_double
-        print(f"Motor de cálculo C carregado: {LIB_NAME}")
+        c_lib.calculate_charging_time.restype = ctypes.c_float
+        print(f"Modulo C carregado: {LIB_NAME}")
     else:
-        print(f"Aviso: Biblioteca C não encontrada em {LIB_PATH}")
+        print(f"Aviso: Biblioteca C nao encontrada em {LIB_PATH}")
+
 except Exception as e:
-    print(f"Erro ao carregar motor C: {e}")
+    print(f"Erro ao carregar modulo C: {e}")
+    c_lib = None
 
 
-def calculate_charging_time(battery_kwh, current_percent, power_kw=22.0):
+def calculate_charging_time(
+        battery_kwh: float,
+        current_percent: float,
+        power_kw: float) -> float:
     """
     Calcula o tempo de recarga.
-    Tenta usar C (mais rápido). Se falhar, usa Python (backup).
+    Prioridade: Motor C (Rapido) -> Fallback: Python (Compativel)
     """
-    # 1. Validações básicas
+    # Validação básica
     if current_percent >= 100:
         return 0.0
-    
     if power_kw <= 0:
         return -1.0
 
-    # 2. Tenta usar o motor C
+    # Tenta usar o C
     if c_lib:
         try:
-            return c_lib.calculate_minutes(
-                float(battery_kwh),
-                float(current_percent),
-                float(power_kw)
-            )
+            return c_lib.calculate_charging_time(
+                battery_kwh, current_percent, power_kw)
         except Exception as e:
-            print(f"Erro na execução do C: {e}")
+            print(f"Erro ao executar C: {e}")
 
-    # 3. Fallback (Plano B): Cálculo em Python puro
-    # Isso garante que o teste passe no GitHub Actions mesmo sem o .dll/.so
-    print("Usando cálculo fallback em Python.")
+    # --- FALLBACK (PLANO B) ---
+    # Se o C falhar ou não existir, calcula em Python
+    print("Usando calculo fallback em Python.")
     needed_kwh = battery_kwh * (1.0 - (current_percent / 100.0))
     hours_needed = needed_kwh / power_kw
     minutes_needed = hours_needed * 60.0
-    
+
     return round(minutes_needed, 2)
