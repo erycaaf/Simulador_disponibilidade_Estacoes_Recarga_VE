@@ -150,3 +150,16 @@ def calculate_charge(
         "charging_power_kw": power_kw,
         "estimated_minutes_remaining": minutes_left
     }
+
+
+@app.post("/simulation/reset")
+async def reset_simulation_endpoint():
+    """
+    Reinicia a simulação recarregando os dados originais.
+    """
+    result = station_database.reset_simulation()
+    return {
+        "message": "Simulação resetada com sucesso",
+        "details": result
+    }
+    
