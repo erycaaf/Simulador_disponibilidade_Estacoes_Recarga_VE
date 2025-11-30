@@ -148,6 +148,56 @@ Remove o arquivo `calculator.dll` para forçar uma nova compilação.
 
 ---
 
+## 📘 Documentação da API (Swagger)
+
+A aplicação possui documentação interativa gerada automaticamente via **Swagger UI**.  
+Essa interface permite visualizar endpoints, parâmetros, modelos de dados e executar requisições diretamente do navegador.
+
+---
+
+### Acessar o Swagger
+
+Assim que o servidor estiver rodando, abra no navegador:
+
+**Swagger UI**  
+http://localhost:8000/docs
+
+**Redoc (documentação alternativa)**  
+http://localhost:8000/redoc
+
+---
+
+### Como usar
+
+Na interface do Swagger, você pode:
+
+- Visualizar todos os endpoints disponíveis
+- Expandir cada rota para ver:
+  - Método (GET, POST, etc.)
+  - Descrição do endpoint
+  - Parâmetros esperados
+  - Exemplos de requisição
+  - Exemplos de resposta
+- Clicar em **“Try it out”** para:
+  - Executar chamadas diretamente do navegador
+  - Alterar valores de entrada
+  - Ver o JSON retornado pela API em tempo real
+
+---
+
+### Esquema OpenAPI
+
+Se quiser obter o esquema completo da API:
+
+- No Swagger UI, clique em **“Download OpenAPI Specification”**,  
+  **ou**
+- Acesse diretamente:
+
+➡️ http://localhost:8000/openapi.json
+
+---
+
+
 ## 📝 Convenção de Commits
 
 Este projeto segue o padrão **Conventional Commits** para manter um histórico organizado e facilitar automações.
