@@ -2,20 +2,22 @@ import sys
 import os
 from unittest.mock import patch
 import pytest
-
+from src.station_database import SimulatedStation
 # Configura o caminho para importar o código fonte
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src import station_database
 
 # --- Dados Falsos para Teste (Mock Data) ---
-FAKE_STATION = {
-    "ID": 999,
-    "AddressInfo": {"Title": "Estação Teste"},
-    "StatusType": {"ID": 10, "Title": "Available"},
-    "DateLastStatusUpdate": "2023-01-01T00:00:00Z"
-}
+FAKE_STATION = SimulatedStation(
+    id=999,
+    potencia=50.0,
+    status="Available",
+    city="Estação Teste",
+    created_at=None,
+    updated_at=None
+)
 
-FAKE_NEW_STATUS = {"ID": 50, "Title": "Charging"}
+FAKE_NEW_STATUS = "Charging"
 
 
 def test_simulation_empty_database():
@@ -39,18 +41,15 @@ def test_simulation_status_change():
 
     # 1. Mockamos o banco de dados (stations_db) para usar nossa lista falsa
     with patch.object(station_database, 'stations_db', fake_db):
-        
         # 2. Mockamos o random.choice
         # O side_effect define o que ele retorna a cada chamada:
         # 1ª chamada: Escolhe a estação
-        # 2ª chamada: Escolhe o novo status
+        # 2ª chamada: Escolhe o novo status (agora string)
         with patch('random.choice', side_effect=[fake_db[0], FAKE_NEW_STATUS]):
-            
             # Executa a função
             log = station_database.simulate_status_change()
 
             # --- Validações ---
-            
             # 1. O retorno do log está correto?
             assert log is not None
             assert log['id'] == 999
@@ -59,7 +58,6 @@ def test_simulation_status_change():
 
             # 2. O objeto no banco de dados foi realmente atualizado?
             updated_station = fake_db[0]
-            assert updated_station['StatusType']['Title'] == "Charging"
-            
-            # Verifica se a data foi atualizada (não é mais a de 2023)
-            assert updated_station['DateLastStatusUpdate'] != "2023-01-01T00:00:00Z"
+            assert updated_station.status == "Charging"
+            # Verifica se a data foi atualizada
+            assert updated_station.updated_at != "2023-01-01T00:00:00Z"
