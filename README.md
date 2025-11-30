@@ -29,14 +29,34 @@ Se necessário, atualize o arquivo `requirements.txt` para garantir que todas as
 
 ## 🚀 Como Executar o Projeto
 
+
+### Windows
 1. Instale as dependências:
-	```bash
-	python -m pip install -r requirements.txt
-	```
-2. Execute o serviço:
-	```bash
-	python -m src.main
-	```
+  ```powershell
+  python -m pip install -r requirements.txt
+  ```
+2. Compile o módulo C (DLL) e execute o backend:
+  - Abra o "x64 Native Tools Command Prompt for VS" (procure no menu Iniciar)
+  - Navegue até a pasta do projeto
+  - Execute:
+    ```powershell
+    make run
+    ```
+  - O backend estará disponível em http://localhost:8000
+
+### Linux
+1. Instale as dependências:
+  ```bash
+  python3 -m pip install -r requirements.txt
+  ```
+2. Compile o módulo C (SO) e execute o backend:
+  ```bash
+  make run
+  ```
+  - O backend estará disponível em http://localhost:8000
+
+### Docker (alternativa cross-platform)
+Siga as instruções da seção Docker para rodar em qualquer sistema.
 
 ## 🐳 Executando com Docker
 O projeto possui suporte completo a Docker, garantindo que o ambiente (incluindo a compilação do módulo em C para Linux) seja configurado automaticamente.
@@ -109,6 +129,7 @@ Consulte os arquivos `.github/workflows/build.yml` e `.github/workflows/nightly.
 * **Integração com Dados Reais:** Consome APIs públicas (como a Open Charge Map) para obter a localização e características técnicas de estações de recarga verdadeiras, usando-as como base para a simulação.
 * **Simulação de Estado em Tempo Real:** Gerencia o ciclo de vida de cada estação, permitindo que seu status seja alterado entre 'Disponível', 'Ocupado' ou 'Em Recarga' através de chamadas de API.
 * **Cálculo de Recarga de Bateria:** Simula a evolução da carga da bateria de um veículo durante o processo de recarga, utilizando um motor de cálculo otimizado para performance.
+  - **Fallback automático:** Se o módulo C (DLL/SO) não puder ser carregado ou ocorrer algum erro, o backend utiliza automaticamente o cálculo equivalente implementado em Python, garantindo que a simulação continue funcionando sem interrupções.
 * **Interação via API REST:** Expõe todos os dados e funcionalidades através de endpoints claros, permitindo que sistemas externos consultem o status das estações ou interajam com a simulação.
 
 ### 🧩 Como funciona a simulação (atualizado)
@@ -177,6 +198,21 @@ Atualiza o status de uma estação simulada. Se o novo status for 'Charging', o 
 ## 🌐 Web Interface (Frontend)
 
 O projeto inclui uma interface web moderna para visualização e teste das estações de recarga simuladas.
+
+### Como acessar a interface web
+
+- **Online (GitHub Pages):**
+  - Acesse: [https://erycaaf.github.io/Simulador_disponibilidade_Estacoes_Recarga_VE/](https://erycaaf.github.io/Simulador_disponibilidade_Estacoes_Recarga_VE/)
+  - A interface exibe os dados simulados, mas requer o backend rodando em ambiente próprio para funcionalidades dinâmicas.
+
+
+- **Local:**
+  1. Inicie o backend Python conforme instruções acima.
+  2. Abra o arquivo `index.html` (na raiz do projeto) no navegador.
+  3. Utilize os filtros de cidade e status para visualizar as estações, endereço e nível de bateria.
+
+**Observação:**
+- O site hospedado no GitHub Pages é apenas frontend estático. Para integração total, rode o backend localmente e acesse a interface web localmente.
 
 - **Localização:** Os arquivos da interface estão em `web_interface/` e o arquivo principal é `index.html` na raiz do projeto.
 - **Como usar:**

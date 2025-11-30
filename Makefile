@@ -1,32 +1,32 @@
-# --- Detecção do Sistema Operacional ---
 ifeq ($(OS),Windows_NT)
-    # Configurações para Windows
-    EXT = dll
-    CFLAGS = -shared
-    RM_CMD = del src\core_c\*.dll 2>NUL || exit 0
+	EXT = dll
+	CC = cl
+	CFLAGS = /LD
+	SRC = src/core_c/calculator.c
+	TARGET = src/core_c/calculator.$(EXT)
+	RM_CMD = del src\core_c\*.dll src\core_c\*.exp src\core_c\*.lib src\core_c\*.obj 2>NUL || exit 0
+	
+build:
+	@echo "🔨 Compilando modulo C para $(EXT)..."
+	$(CC) $(CFLAGS) $(SRC) /Fe:$(TARGET)
+	@echo "✅ Build concluido: $(TARGET)"
 else
-    # Configurações para Linux (Docker)
-    EXT = so
-    # -fPIC é obrigatório para Linux
-    CFLAGS = -shared -fPIC
-    RM_CMD = rm -f src/core_c/*.so
-endif
+	EXT = so
+	CC = gcc
+	CFLAGS = -shared -fPIC
+	SRC = src/core_c/calculator.c
+	TARGET = src/core_c/calculator.$(EXT)
+	RM_CMD = rm -f src/core_c/*.so
 
-# --- Variáveis de Configuração ---
-CC = gcc
-SRC = src/core_c/calculator.c
-# O nome do arquivo final muda dinamicamente (.dll ou .so)
-TARGET = src/core_c/calculator.$(EXT)
-
-# --- Regras (Targets) ---
-
-all: build
-
-# Regra de Compilação
 build:
 	@echo "🔨 Compilando modulo C para $(EXT)..."
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 	@echo "✅ Build concluido: $(TARGET)"
+endif
+
+# --- Regras (Targets) ---
+
+all: build
 
 # Regra para rodar a API (atalho local)
 run: build

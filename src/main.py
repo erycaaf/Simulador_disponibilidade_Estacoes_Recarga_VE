@@ -42,6 +42,33 @@ async def run_simulation():
                         print(
                             f"Erro ao calcular nível final: {e}"
                         )
+                        # Fallback: calcula em Python se DLL falhar
+                        energia_adicionada = power_kw * (
+                            charging_interval_minutes / 60.0
+                        )
+                        energia_atual = battery_kwh * (
+                            current_percent / 100.0
+                        )
+                        nova_energia = min(
+                            energia_atual + energia_adicionada, battery_kwh
+                        )
+                        final_percent = (
+                            nova_energia / battery_kwh
+                        ) * 100.0
+                else:
+                    # Fallback: calcula em Python se DLL não existir
+                    energia_adicionada = power_kw * (
+                        charging_interval_minutes / 60.0
+                    )
+                    energia_atual = battery_kwh * (
+                        current_percent / 100.0
+                    )
+                    nova_energia = min(
+                        energia_atual + energia_adicionada, battery_kwh
+                    )
+                    final_percent = (
+                        nova_energia / battery_kwh
+                    ) * 100.0
                 # Atualiza o nível da bateria
                 station.battery_percent = min(final_percent, 100.0)
                 # Se chegou a 100%, muda status para 'Available'
