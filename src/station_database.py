@@ -119,4 +119,46 @@ def reset_simulation():
     }
 
 
+def update_station_status(station_id: int, new_status: str):
+    """
+    Atualiza o status de uma estação simulada pelo ID.
+    Se o novo status for 'Charging',
+    simula o cálculo de recarga usando o motor C.
+    Retorna o objeto atualizado ou None se não encontrado.
+    """
+    from src.charging_engine import calculate_charging_time, ctypes, c_lib
+    for station in stations_db:
+        if station.id == station_id:
+            if new_status.lower() == "charging":
+                battery_kwh = 60.0
+                current_percent = station.battery_percent
+                power_kw = station.potencia
+                charging_minutes = calculate_charging_time(
+                    battery_kwh, current_percent, power_kw)
+                # Calcula novo nível da bateria usando motor C
+                final_percent = current_percent
+                if c_lib and hasattr(c_lib, "calculate_final_level"):
+                    try:
+                        c_lib.calculate_final_level.argtypes = [
+                            ctypes.c_float, ctypes.c_float,
+                            ctypes.c_float, ctypes.c_float]
+                        c_lib.calculate_final_level.restype = ctypes.c_float
+                        final_percent = c_lib.calculate_final_level(
+                            battery_kwh, current_percent,
+                            power_kw, charging_minutes)
+                    except Exception as e:
+                        print(f"Erro ao calcular nível final: {e}")
+                # Atualiza o nível da bateria
+                station.battery_percent = min(final_percent, 100.0)
+                station.update_status(new_status)
+                result = station.to_dict()
+                result["ChargingMinutes"] = charging_minutes
+                result["FinalBatteryPercent"] = station.battery_percent
+                return result
+            else:
+                station.update_status(new_status)
+                return station.to_dict()
+    return None
+
+
 load_data()

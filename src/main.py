@@ -1,5 +1,5 @@
 import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 from src import station_database, charging_engine, map_engine
@@ -162,3 +162,17 @@ async def reset_simulation_endpoint():
         "message": "Simulação resetada com sucesso",
         "details": result
     }
+
+
+@app.post("/simulation/updateStatus")
+def update_station_status(
+        station_id: int = Body(...),
+        new_status: str = Body(...)):
+    """
+    Atualiza o status de uma estação simulada.
+    Parâmetros: station_id (int), new_status (str)
+    """
+    updated = station_database.update_station_status(station_id, new_status)
+    if updated:
+        return {"message": "Status atualizado com sucesso", "station": updated}
+    return {"error": "Estação não encontrada ou status inválido"}

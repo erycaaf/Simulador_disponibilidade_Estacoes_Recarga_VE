@@ -10,12 +10,14 @@ class SimulatedStation:
             potencia: float,
             status: str,
             city: str = "",
+            battery_percent: float = 20.0,
             created_at: Optional[datetime] = None,
             updated_at: Optional[datetime] = None):
         self.id = id
         self.potencia = potencia
         self.status = status
         self.city = city
+        self.battery_percent = battery_percent
         self.created_at = created_at or datetime.utcnow()
         self.updated_at = updated_at or datetime.utcnow()
 
@@ -29,6 +31,7 @@ class SimulatedStation:
             "Potencia": self.potencia,
             "Status": self.status,
             "City": self.city,
+            "BatteryPercent": self.battery_percent,
             "CreatedAt": self.created_at.isoformat(),
             "UpdatedAt": self.updated_at.isoformat()
         }
@@ -39,6 +42,7 @@ class SimulatedStation:
             potencia=self.potencia,
             status=self.status,
             city=self.city,
+            battery_percent=self.battery_percent,
             created_at=self.created_at,
             updated_at=self.updated_at
         )
@@ -58,8 +62,7 @@ class SimulatedStation:
                 24000, 25000, 30000, 50000, 75000, 90000,
                 100000, 120000, 150000, 175000, 200000,
                 250000, 270000, 300000, 320000, 350000]
-            potencia = random.choice(ev_power_values_w) / \
-                1000.0  # Convertendo para kW
+            potencia = random.choice(ev_power_values_w) / 1000.0  # kW
 
         # Status: se não definido, sorteia entre possíveis
         if "Status" in data:
@@ -72,11 +75,15 @@ class SimulatedStation:
                 "Out of Service"]
             status = random.choice(status_list)
 
+        # Battery percent: default 20% if not present
+        battery_percent = data.get("BatteryPercent", 20.0)
+
         return SimulatedStation(
             id=data.get("ID"),
             potencia=potencia,
             status=status,
             city=city,
+            battery_percent=battery_percent,
             created_at=datetime.fromisoformat(
                 data["CreatedAt"]) if "CreatedAt" in data else None,
             updated_at=datetime.fromisoformat(

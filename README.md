@@ -118,6 +118,64 @@ Consulte os arquivos `.github/workflows/build.yml` e `.github/workflows/nightly.
 * O status inicial da estação (`Status`) também é preenchido aleatoriamente entre os valores possíveis: 'Available', 'Operational', 'Charging', 'Out of Service', caso não esteja presente nos dados.
 * A cidade da estação é extraída do campo `AddressInfo['Town']` e pode ser usada para consultas, como filtrar todas as estações de uma cidade específica.
 * Todos os atributos (potência, status, cidade, timestamps) podem ser acessados e atualizados durante a simulação, permitindo cenários dinâmicos e realistas.
+
+## 🧩 Endpoints da API
+
+A API expõe os seguintes endpoints principais para interação e simulação:
+
+### GET /health
+Retorna o status de saúde do serviço (útil para monitoramento e CI).
+
+### GET /
+Página inicial simples.
+
+### GET /stations
+Lista todas as estações simuladas, com seus atributos atuais (potência, status, cidade, nível de bateria, etc).
+
+### GET /stations/status/{status_name}
+Filtra as estações pelo status (ex: 'Available', 'Charging', etc).
+
+### GET /stations/{station_id}
+Retorna os dados completos de uma estação específica.
+
+### GET /stations/city/{city_name}
+Filtra as estações por cidade.
+
+### GET /stations/city/{city_name}/map
+Retorna um mapa HTML com as estações da cidade.
+
+### GET /stations/{station_id}/calculate
+Executa um cálculo de recarga para a estação informada.
+
+### POST /simulation/reset
+Restaura o banco de dados de estações ao estado original do arquivo JSON.
+
+### POST /simulation/updateStatus
+Atualiza o status de uma estação simulada. Se o novo status for 'Charging', o sistema simula o processo de recarga usando o motor C, atualizando o nível de bateria e retornando o tempo de recarga calculado e o novo nível de bateria.
+
+**Exemplo de payload:**
+```json
+{
+  "station_id": 123,
+  "new_status": "Charging"
+}
+```
+**Resposta:**
+```json
+{
+  "ID": 123,
+  "Potencia": 50.0,
+  "Status": "Charging",
+  "City": "São Paulo",
+  "BatteryPercent": 20.0,
+  "ChargingMinutes": 96.0,
+  "FinalBatteryPercent": 100.0,
+  ...
+}
+```
+
+---
+
 ## 🛠️ Comandos Makefile
 
 O projeto inclui um `Makefile` para facilitar tarefas comuns de desenvolvimento. Você pode usar os comandos abaixo no terminal, na raiz do projeto:
