@@ -25,12 +25,23 @@ async def run_simulation():
                 final_percent = current_percent
                 if c_lib and hasattr(c_lib, "calculate_final_level"):
                     try:
-                        c_lib.calculate_final_level.argtypes = [ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float]
+                        c_lib.calculate_final_level.argtypes = [
+                            ctypes.c_float,
+                            ctypes.c_float,
+                            ctypes.c_float,
+                            ctypes.c_float
+                        ]
                         c_lib.calculate_final_level.restype = ctypes.c_float
                         final_percent = c_lib.calculate_final_level(
-                            battery_kwh, current_percent, power_kw, charging_interval_minutes)
+                            battery_kwh,
+                            current_percent,
+                            power_kw,
+                            charging_interval_minutes
+                        )
                     except Exception as e:
-                        print(f"Erro ao calcular nível final: {e}")
+                        print(
+                            f"Erro ao calcular nível final: {e}"
+                        )
                 # Atualiza o nível da bateria
                 station.battery_percent = min(final_percent, 100.0)
                 # Se chegou a 100%, muda status para 'Available'
@@ -65,7 +76,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Para desenvolvimento; defina o domínio do frontend em produção
+    allow_origins=[
+        "*"  # Para desenvolvimento; defina o domínio do frontend em produção
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

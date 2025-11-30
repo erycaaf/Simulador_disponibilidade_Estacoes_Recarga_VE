@@ -28,7 +28,9 @@ class SimulatedStation:
         self.updated_at = datetime.utcnow()
 
     def to_dict(self):
-        battery_value = self.battery_percent if self.status == "Charging" else None
+        battery_value = (
+            self.battery_percent if self.status == "Charging" else None
+        )
         return {
             "ID": self.id,
             "Potencia": self.potencia,
