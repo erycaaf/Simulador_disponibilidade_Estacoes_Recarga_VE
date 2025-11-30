@@ -1,0 +1,7 @@
+feat(web): add modern web interface, update README and simulation logic
+
+- Added a responsive, dark-mode web interface (HTML/CSS/JS) in web_interface/ and index.html for visualizing and filtering charging stations by city and status.
+- Frontend now displays station status, power, address (from AddressInfo), and battery level (only if Charging).
+- Updated README with detailed instructions for using the web interface, integration requirements, and clarified battery/address logic.
+- Improved backend simulation: battery level is updated dynamically for Charging stations, and status changes to Available when battery reaches 100%.
+- Ensured all documentation matches the actual code and data model.

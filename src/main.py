@@ -1,8 +1,9 @@
 import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 from src import station_database, charging_engine, map_engine
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- Loop da Simulação ---
 
@@ -10,13 +11,71 @@ from src import station_database, charging_engine, map_engine
 async def run_simulation():
     """Função que roda em paralelo enquanto a API estiver ligada."""
     print("⚡ Simulador Iniciado: Alterando status das estações...")
+    from src.charging_engine import ctypes, c_lib
+    battery_kwh = 60.0  # Valor fixo para simulação
+    charging_interval_minutes = 5.0  # Cada ciclo simula 5 minutos de carga
     while True:
-        # Espera 5 segundos
         await asyncio.sleep(5)
 
-        # Executa uma mudança de status
+        # Atualiza todas as estações em modo 'Charging'
+        for station in station_database.stations_db:
+            if station.status == "Charging":
+                current_percent = station.battery_percent
+                power_kw = station.potencia
+                final_percent = current_percent
+                if c_lib and hasattr(c_lib, "calculate_final_level"):
+                    try:
+                        c_lib.calculate_final_level.argtypes = [
+                            ctypes.c_float,
+                            ctypes.c_float,
+                            ctypes.c_float,
+                            ctypes.c_float
+                        ]
+                        c_lib.calculate_final_level.restype = ctypes.c_float
+                        final_percent = c_lib.calculate_final_level(
+                            battery_kwh,
+                            current_percent,
+                            power_kw,
+                            charging_interval_minutes
+                        )
+                    except Exception as e:
+                        print(
+                            f"Erro ao calcular nível final: {e}"
+                        )
+                        # Fallback: calcula em Python se DLL falhar
+                        energia_adicionada = power_kw * (
+                            charging_interval_minutes / 60.0
+                        )
+                        energia_atual = battery_kwh * (
+                            current_percent / 100.0
+                        )
+                        nova_energia = min(
+                            energia_atual + energia_adicionada, battery_kwh
+                        )
+                        final_percent = (
+                            nova_energia / battery_kwh
+                        ) * 100.0
+                else:
+                    # Fallback: calcula em Python se DLL não existir
+                    energia_adicionada = power_kw * (
+                        charging_interval_minutes / 60.0
+                    )
+                    energia_atual = battery_kwh * (
+                        current_percent / 100.0
+                    )
+                    nova_energia = min(
+                        energia_atual + energia_adicionada, battery_kwh
+                    )
+                    final_percent = (
+                        nova_energia / battery_kwh
+                    ) * 100.0
+                # Atualiza o nível da bateria
+                station.battery_percent = min(final_percent, 100.0)
+                # Se chegou a 100%, muda status para 'Available'
+                if station.battery_percent >= 100.0:
+                    station.status = "Available"
+        # Executa uma mudança de status aleatória
         change_log = station_database.simulate_status_change()
-
         if change_log:
             print(f"🔄 [SIMULAÇÃO] Estação {change_log['id']} mudou: "
                   f"{change_log['old_status']} -> {change_log['new_status']}")
@@ -42,6 +101,16 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "*"  # Para desenvolvimento; defina o domínio do frontend em produção
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/health")
 def health_check():
@@ -60,6 +129,11 @@ def read_root():
 @app.get("/stations")
 def list_all_stations():
     return station_database.get_all_stations()
+
+
+@app.get("/stations/status/{status_name}")
+def read_station_by_status(status_name: str):
+    return station_database.get_stations_by_status(status_name)
 
 
 @app.get("/stations/{station_id}")
@@ -133,14 +207,41 @@ def calculate_charge(
     if connections and connections[0].get('PowerKW'):
         power_kw = connections[0]['PowerKW']
 
-    # Chama a função C
-    minutes_left = charging_engine.estimate_time(
+    # --- CORREÇÃO AQUI: Usando o novo nome da função ---
+    minutes_left = charging_engine.calculate_charging_time(
         battery_kwh, current_percent, power_kw)
+    # ---------------------------------------------------
 
     return {
         "station_id": station_id,
-        "charger_power_kw": power_kw,
-        "vehicle_battery_kwh": battery_kwh,
-        "current_charge_percent": current_percent,
-        "estimated_minutes_remaining": round(minutes_left, 2)
+        "battery_kwh": battery_kwh,
+        "current_percent": current_percent,
+        "charging_power_kw": power_kw,
+        "estimated_minutes_remaining": minutes_left
     }
+
+
+@app.post("/simulation/reset")
+async def reset_simulation_endpoint():
+    """
+    Reinicia a simulação recarregando os dados originais.
+    """
+    result = station_database.reset_simulation()
+    return {
+        "message": "Simulação resetada com sucesso",
+        "details": result
+    }
+
+
+@app.post("/simulation/updateStatus")
+def update_station_status(
+        station_id: int = Body(...),
+        new_status: str = Body(...)):
+    """
+    Atualiza o status de uma estação simulada.
+    Parâmetros: station_id (int), new_status (str)
+    """
+    updated = station_database.update_station_status(station_id, new_status)
+    if updated:
+        return {"message": "Status atualizado com sucesso", "station": updated}
+    return {"error": "Estação não encontrada ou status inválido"}

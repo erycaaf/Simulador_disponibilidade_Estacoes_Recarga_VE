@@ -3,7 +3,7 @@ name: Build and Lint
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,6 +11,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y gcc make
+      - name: Build C module
+        run: make build
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run lint
@@ -19,3 +23,23 @@ jobs:
         run: pytest
         env:
           PYTHONPATH: ${{ github.workspace }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Build C module (MinGW-w64)
+        run: make build
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run lint
+        run: pip install flake8 && flake8 src/
+      - name: Run tests
+        run: pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+  
