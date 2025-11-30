@@ -11,6 +11,7 @@ class SimulatedStation:
             status: str,
             city: str = "",
             battery_percent: float = 20.0,
+            address_info: dict = None,
             created_at: Optional[datetime] = None,
             updated_at: Optional[datetime] = None):
         self.id = id
@@ -18,6 +19,7 @@ class SimulatedStation:
         self.status = status
         self.city = city
         self.battery_percent = battery_percent
+        self.address_info = address_info or {}
         self.created_at = created_at or datetime.utcnow()
         self.updated_at = updated_at or datetime.utcnow()
 
@@ -26,12 +28,16 @@ class SimulatedStation:
         self.updated_at = datetime.utcnow()
 
     def to_dict(self):
+        battery_value = (
+            self.battery_percent if self.status == "Charging" else None
+        )
         return {
             "ID": self.id,
             "Potencia": self.potencia,
             "Status": self.status,
             "City": self.city,
-            "BatteryPercent": self.battery_percent,
+            "BatteryPercent": battery_value,
+            "AddressInfo": self.address_info,
             "CreatedAt": self.created_at.isoformat(),
             "UpdatedAt": self.updated_at.isoformat()
         }
@@ -84,6 +90,7 @@ class SimulatedStation:
             status=status,
             city=city,
             battery_percent=battery_percent,
+            address_info=address_info,
             created_at=datetime.fromisoformat(
                 data["CreatedAt"]) if "CreatedAt" in data else None,
             updated_at=datetime.fromisoformat(

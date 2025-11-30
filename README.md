@@ -111,13 +111,11 @@ Consulte os arquivos `.github/workflows/build.yml` e `.github/workflows/nightly.
 * **Cálculo de Recarga de Bateria:** Simula a evolução da carga da bateria de um veículo durante o processo de recarga, utilizando um motor de cálculo otimizado para performance.
 * **Interação via API REST:** Expõe todos os dados e funcionalidades através de endpoints claros, permitindo que sistemas externos consultem o status das estações ou interajam com a simulação.
 
-### 🧩 Como funciona a simulação
+### 🧩 Como funciona a simulação (atualizado)
 
-* Cada estação é representada por um objeto Python (`SimulatedStation`).
-* Se o valor de potência (`Potencia`) não estiver definido nos dados, ele será preenchido automaticamente com um valor aleatório escolhido de uma lista realista de potências de carregadores (ex: 7.2, 22, 50, 150, 300 kW, etc).
-* O status inicial da estação (`Status`) também é preenchido aleatoriamente entre os valores possíveis: 'Available', 'Operational', 'Charging', 'Out of Service', caso não esteja presente nos dados.
-* A cidade da estação é extraída do campo `AddressInfo['Town']` e pode ser usada para consultas, como filtrar todas as estações de uma cidade específica.
-* Todos os atributos (potência, status, cidade, timestamps) podem ser acessados e atualizados durante a simulação, permitindo cenários dinâmicos e realistas.
+- Cada estação é representada por um objeto Python (`SimulatedStation`), que inclui atributos como potência, status, cidade, timestamps, nível de bateria (`BatteryPercent`, apenas se "Charging") e endereço (`AddressInfo`).
+- O backend atualiza o nível de bateria das estações em modo "Charging" a cada ciclo de simulação, usando o motor C. Quando a bateria chega a 100%, o status muda automaticamente para "Available".
+- O frontend exibe todos esses dados de forma clara e moderna, facilitando o teste e visualização do sistema.
 
 ## 🧩 Endpoints da API
 
@@ -173,6 +171,28 @@ Atualiza o status de uma estação simulada. Se o novo status for 'Charging', o 
   ...
 }
 ```
+
+---
+
+## 🌐 Web Interface (Frontend)
+
+O projeto inclui uma interface web moderna para visualização e teste das estações de recarga simuladas.
+
+- **Localização:** Os arquivos da interface estão em `web_interface/` e o arquivo principal é `index.html` na raiz do projeto.
+- **Como usar:**
+  1. Inicie o backend Python normalmente (`python -m src.main` ou `make run`).
+  2. Abra `index.html` no seu navegador.
+  3. Pesquise por cidade e filtre por status para visualizar as estações, seus status, endereço e (se aplicável) o nível de bateria.
+- **Requisitos:** O backend deve estar rodando e o CORS habilitado para acesso local.
+- **Funcionalidades:**
+  - Busca por cidade e status
+  - Visualização do status, potência, endereço e nível de bateria (apenas se a estação estiver em modo "Charging")
+  - Interface responsiva e com modo escuro
+
+### Sobre os dados exibidos
+- **Bateria:** O campo de bateria só aparece se a estação está em modo "Charging". O valor é atualizado dinamicamente pelo backend usando o motor C.
+- **Endereço:** O endereço da estação é extraído do campo `AddressInfo` e exibido na interface.
+- **Status:** O status pode ser alterado dinamicamente pela simulação ou via API.
 
 ---
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Estações de Recarga</title>
+    <link rel="stylesheet" href="web_interface/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Estações de Recarga</h1>
+        <form id="cityForm">
+            <label for="cityInput">Nome da cidade:</label>
+            <input type="text" id="cityInput" placeholder="Digite a cidade..." required>
+            <label for="statusSelect">Status:</label>
+            <select id="statusSelect">
+                <option value="">Todos</option>
+                <option value="Available">Available</option>
+                <option value="Charging">Charging</option>
+                <option value="Operational">Operational</option>
+                <option value="Out of Service">Out of Service</option>
+            </select>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="stations"></div>
+    </div>
+    <script src="web_interface/app.js"></script>
+</body>
+</html>
