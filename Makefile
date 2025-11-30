@@ -1,28 +1,33 @@
+
+# --- Windows: Use MinGW-w64 gcc for CI, cl for local MSVC builds ---
 ifeq ($(OS),Windows_NT)
-	EXT = dll
-	CC = cl
-	CFLAGS = /LD
-	SRC = src/core_c/calculator.c
-	TARGET = src/core_c/calculator.$(EXT)
-	RM_CMD = del src\core_c\*.dll src\core_c\*.exp src\core_c\*.lib src\core_c\*.obj 2>NUL || exit 0
-	
-build:
-	@echo "🔨 Compilando modulo C para $(EXT)..."
-	$(CC) $(CFLAGS) $(SRC) /Fe:$(TARGET)
-	@echo "✅ Build concluido: $(TARGET)"
+    EXT = dll
+    SRC = src/core_c/calculator.c
+    TARGET = src/core_c/calculator.$(EXT)
+    RM_CMD = del src\core_c\*.dll 2>NUL || exit 0
+    # Default to cl, override with CC=gcc for CI
+    CC ?= cl
+    ifeq ($(CC),cl)
+        CFLAGS = /LD
+        BUILD_CMD = $(CC) $(CFLAGS) $(SRC) /Fe:$(TARGET)
+    else
+        CFLAGS = -shared
+        BUILD_CMD = $(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+    endif
 else
-	EXT = so
-	CC = gcc
-	CFLAGS = -shared -fPIC
-	SRC = src/core_c/calculator.c
-	TARGET = src/core_c/calculator.$(EXT)
-	RM_CMD = rm -f src/core_c/*.so
+    EXT = so
+    CC = gcc
+    CFLAGS = -shared -fPIC
+    SRC = src/core_c/calculator.c
+    TARGET = src/core_c/calculator.$(EXT)
+    RM_CMD = rm -f src/core_c/*.so
+    BUILD_CMD = $(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+endif
 
 build:
 	@echo "🔨 Compilando modulo C para $(EXT)..."
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+	$(BUILD_CMD)
 	@echo "✅ Build concluido: $(TARGET)"
-endif
 
 # --- Regras (Targets) ---
 

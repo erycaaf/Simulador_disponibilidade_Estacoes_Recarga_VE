@@ -240,7 +240,21 @@ O projeto inclui um `Makefile` para facilitar tarefas comuns de desenvolvimento.
 ```bash
 make build
 ```
-Compila o arquivo `src/core_c/calculator.c` e gera `src/core_c/calculator.dll`.
+Compila o arquivo `src/core_c/calculator.c` e gera `src/core_c/calculator.dll` (Windows) ou `src/core_c/calculator.so` (Linux).
+
+#### Windows: Selecionando o compilador
+- Por padrão, o Makefile usa o MSVC (`cl`) se disponível.
+- Para forçar o uso do MinGW-w64 (`gcc`), defina a variável de ambiente `CC`:
+  ```powershell
+  set CC=gcc
+  make build
+  ```
+- Para usar o MSVC (`cl`), defina:
+  ```powershell
+  set CC=cl
+  make build
+  ```
+- No CI (GitHub Actions), o compilador padrão é o MinGW-w64 (`gcc`).
 
 ### Rodar a API
 ```bash
