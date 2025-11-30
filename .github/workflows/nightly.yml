@@ -6,8 +6,79 @@ on:
   workflow_dispatch:
 
 jobs:
-  nightly-tests:
+  nightly-linux:
     runs-on: ubuntu-latest
+    nightly-linux:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.11'
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Build C module
+          run: make build
+
+        - name: Run tests and collect coverage
+          run: pytest --cov=src --cov-report=xml --log-cli-level=INFO
+          env:
+            PYTHONPATH: ${{ github.workspace }}
+
+        - name: Upload coverage report
+          uses: actions/upload-artifact@v4
+          with:
+            name: coverage-report-linux
+            path: coverage.xml
+
+        - name: Upload pytest logs
+          uses: actions/upload-artifact@v4
+          with:
+            name: pytest-logs-linux
+            path: .pytest_cache
+
+    nightly-windows:
+      runs-on: windows-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.11'
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Build C module (MinGW-w64)
+          run: make build
+
+        - name: Run tests and collect coverage
+          run: pytest --cov=src --cov-report=xml --log-cli-level=INFO
+          env:
+            PYTHONPATH: ${{ github.workspace }}
+
+        - name: Upload coverage report
+          uses: actions/upload-artifact@v4
+          with:
+            name: coverage-report-windows
+            path: coverage.xml
+
+        - name: Upload pytest logs
+          uses: actions/upload-artifact@v4
+          with:
+            name: pytest-logs-windows
+            path: .pytest_cache
+          path: .pytest_cache
+
+  nightly-windows:
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,6 +91,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Build C module
+        run: make build
+
       - name: Run tests and collect coverage
         run: pytest --cov=src --cov-report=xml --log-cli-level=INFO
         env:
@@ -28,11 +102,11 @@ jobs:
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: coverage-report-windows
           path: coverage.xml
 
       - name: Upload pytest logs
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-logs
+          name: pytest-logs-windows
           path: .pytest_cache

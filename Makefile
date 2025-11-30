@@ -1,32 +1,37 @@
-# --- Detecção do Sistema Operacional ---
+
+# --- Windows: Use MinGW-w64 gcc for CI, cl for local MSVC builds ---
 ifeq ($(OS),Windows_NT)
-    # Configurações para Windows
     EXT = dll
-    CFLAGS = -shared
+    SRC = src/core_c/calculator.c
+    TARGET = src/core_c/calculator.$(EXT)
     RM_CMD = del src\core_c\*.dll 2>NUL || exit 0
+    # Default to cl, override with CC=gcc for CI
+    CC ?= cl
+    ifeq ($(CC),cl)
+        CFLAGS = /LD
+        BUILD_CMD = $(CC) $(CFLAGS) $(SRC) /Fe:$(TARGET)
+    else
+        CFLAGS = -shared
+        BUILD_CMD = $(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+    endif
 else
-    # Configurações para Linux (Docker)
     EXT = so
-    # -fPIC é obrigatório para Linux
+    CC = gcc
     CFLAGS = -shared -fPIC
+    SRC = src/core_c/calculator.c
+    TARGET = src/core_c/calculator.$(EXT)
     RM_CMD = rm -f src/core_c/*.so
+    BUILD_CMD = $(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 endif
 
-# --- Variáveis de Configuração ---
-CC = gcc
-SRC = src/core_c/calculator.c
-# O nome do arquivo final muda dinamicamente (.dll ou .so)
-TARGET = src/core_c/calculator.$(EXT)
+build:
+	@echo "🔨 Compilando modulo C para $(EXT)..."
+	$(BUILD_CMD)
+	@echo "✅ Build concluido: $(TARGET)"
 
 # --- Regras (Targets) ---
 
 all: build
-
-# Regra de Compilação
-build:
-	@echo "🔨 Compilando modulo C para $(EXT)..."
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
-	@echo "✅ Build concluido: $(TARGET)"
 
 # Regra para rodar a API (atalho local)
 run: build

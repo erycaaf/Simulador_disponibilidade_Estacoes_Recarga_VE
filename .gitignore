@@ -8,7 +8,9 @@ __pycache__/
 *.exe
 *.o
 *.so
-
+*.exp
+*.lib
+*.obj
 # Ignorar arquivos de sistema
 .DS_Store
 Thumbs.db
