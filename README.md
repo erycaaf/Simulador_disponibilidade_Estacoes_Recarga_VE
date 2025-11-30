@@ -148,6 +148,63 @@ Remove o arquivo `calculator.dll` para forçar uma nova compilação.
 
 ---
 
+## 💻 Guia de Deploy (Ambiente de Produção)
+Esta seção explica de forma simples como fazer o *deploy* do projeto.
+
+### 1. Pré‑requisitos
+Antes de realizar o deploy, você precisa ter instalado:
+* *Docker*
+* *Docker Compose* (opcional, dependendo do fluxo)
+
+---
+### 2. Estrutura do Projeto
+
+O projeto possui um Dockerfile na raiz, responsável por gerar a imagem contendo toda a aplicação.
+
+---
+###  3. Build da Imagem Docker
+Execute o comando abaixo na raiz do projeto:
+```bash
+docker build -t simulador-estacoes .
+```
+
+Isso cria uma imagem chamada *simulador-estacoes*.
+
+---
+### 4. Executando o Container
+Após o build, rode o container com:
+```bash
+docker run --rm simulador-estacoes
+```
+
+Esse comando executa o simulador conforme definido no Dockerfile.
+
+---
+###  5. Atualizando a Aplicação (Novo Deploy)
+Sempre que atualizar o código, basta repetir o processo:
+1. *Build da imagem novamente:*
+```bash
+docker build -t simulador-estacoes .
+```
+2. *Executar o container:*
+```bash
+docker run --rm simulador-estacoes
+```
+---
+###  Deploy em Produção (Fluxo Geral)
+O deploy consiste basicamente em:
+1. Fazer push da nova versão do código para o repositório.
+2. Gerar nova imagem Docker.
+3. Substituir a imagem antiga pela nova no ambiente onde será executado.
+No servidor:
+```bash
+git pull
+docker build -t simulador-estacoes .
+docker stop simulador-estacoes || true
+docker run -d --name simulador-estacoes simulador-estacoes
+```
+---
+
 ## 📘 Documentação da API (Swagger)
 
 A aplicação possui documentação interativa gerada automaticamente via **Swagger UI**.  
