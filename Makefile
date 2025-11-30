@@ -33,6 +33,12 @@ run: build
 	@echo "🚀 Iniciando servidor FastAPI..."
 	uvicorn src.main:app --reload
 
+
+# Regra para rodar os testes (garante build do C antes)
+test: build
+	@echo "🧪 Executando testes..."
+	pytest
+
 # Regra de Limpeza (Adaptada para o SO correto)
 clean:
 	@echo "🧹 Limpando artefatos de build..."
