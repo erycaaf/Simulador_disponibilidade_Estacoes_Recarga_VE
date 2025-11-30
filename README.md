@@ -59,32 +59,29 @@ Se necessário, atualize o arquivo `requirements.txt` para garantir que todas as
 Siga as instruções da seção Docker para rodar em qualquer sistema.
 
 ## 🐳 Executando com Docker
-O projeto possui suporte completo a Docker, garantindo que o ambiente (incluindo a compilação do módulo em C para Linux) seja configurado automaticamente.
 
-1. Construir a Imagem
+O projeto possui suporte completo a Docker e Docker Compose, garantindo que o ambiente (incluindo a compilação do módulo em C para Linux) seja configurado automaticamente.
 
-Este comando lê o Dockerfile, instala as dependências, compila o código C (.so) e prepara a aplicação.
+### Como executar o backend com Docker Compose
+1. Certifique-se de que o Docker Desktop está instalado e rodando em modo Linux containers.
+2. No terminal, navegue até a raiz do projeto e execute:
+  ```bash
+  docker compose up --build
+  ```
+  Isso irá:
+  - Construir a imagem do backend (compilando o módulo C como .so para Linux)
+  - Iniciar o servidor FastAPI na porta 8000
 
-```bash
-docker build -t 
-simulador-disponibilidade .
-```
+3. Acesse a API pelo navegador:
+  - Página inicial: http://localhost:8000
+  - Documentação Swagger: http://localhost:8000/docs
 
-2. Rodar o Container
+### Como utilizar o sistema completo
+- **Backend:** Execute o comando acima para iniciar o backend localmente.
+- **Frontend:** Acesse a interface web em [https://erycaaf.github.io/Simulador_disponibilidade_Estacoes_Recarga_VE/](https://erycaaf.github.io/Simulador_disponibilidade_Estacoes_Recarga_VE/)
+  - Se necessário, configure o frontend para consumir o backend em `http://localhost:8000`.
 
-Inicia o servidor web dentro do container e libera a porta 8000 para acesso local.
-
-```bash
-docker run --rm -p 8000:8000 simulador-disponibilidade
-```
---rm: Remove o container automaticamente ao desligar (limpa o ambiente).
-
--p 8000:8000: Permite acessar a API pelo seu navegador.
-Após rodar, a API estará disponível em:
-
-Home: http://localhost:8000
-
-Documentação Interativa (Swagger): http://localhost:8000/docs
+Assim, basta rodar o container do backend e acessar o link do frontend para utilizar o sistema de simulação.
 
 ## 🧪 Como Executar os Testes
 
