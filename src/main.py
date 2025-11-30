@@ -162,4 +162,3 @@ async def reset_simulation_endpoint():
         "message": "Simulação resetada com sucesso",
         "details": result
     }
-    
