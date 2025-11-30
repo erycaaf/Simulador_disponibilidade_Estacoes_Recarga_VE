@@ -3,6 +3,7 @@ from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 from src import station_database, charging_engine, map_engine
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- Loop da Simulação ---
 
@@ -10,13 +11,33 @@ from src import station_database, charging_engine, map_engine
 async def run_simulation():
     """Função que roda em paralelo enquanto a API estiver ligada."""
     print("⚡ Simulador Iniciado: Alterando status das estações...")
+    from src.charging_engine import ctypes, c_lib
+    battery_kwh = 60.0  # Valor fixo para simulação
+    charging_interval_minutes = 5.0  # Cada ciclo simula 5 minutos de carga
     while True:
-        # Espera 5 segundos
         await asyncio.sleep(5)
 
-        # Executa uma mudança de status
+        # Atualiza todas as estações em modo 'Charging'
+        for station in station_database.stations_db:
+            if station.status == "Charging":
+                current_percent = station.battery_percent
+                power_kw = station.potencia
+                final_percent = current_percent
+                if c_lib and hasattr(c_lib, "calculate_final_level"):
+                    try:
+                        c_lib.calculate_final_level.argtypes = [ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float]
+                        c_lib.calculate_final_level.restype = ctypes.c_float
+                        final_percent = c_lib.calculate_final_level(
+                            battery_kwh, current_percent, power_kw, charging_interval_minutes)
+                    except Exception as e:
+                        print(f"Erro ao calcular nível final: {e}")
+                # Atualiza o nível da bateria
+                station.battery_percent = min(final_percent, 100.0)
+                # Se chegou a 100%, muda status para 'Available'
+                if station.battery_percent >= 100.0:
+                    station.status = "Available"
+        # Executa uma mudança de status aleatória
         change_log = station_database.simulate_status_change()
-
         if change_log:
             print(f"🔄 [SIMULAÇÃO] Estação {change_log['id']} mudou: "
                   f"{change_log['old_status']} -> {change_log['new_status']}")
@@ -40,6 +61,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Simulador de Estações de Recarga",
     lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Para desenvolvimento; defina o domínio do frontend em produção
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
