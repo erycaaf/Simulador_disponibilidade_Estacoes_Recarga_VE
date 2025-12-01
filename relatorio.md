@@ -158,6 +158,7 @@ Esta versão estabeleceu a baseline do projeto, focando na infraestrutura de bac
    * Containerização completa da aplicação (Dockerfile);
    * Configuração inicial do Pipeline de CI e testes automatizados básicos;
    * Habilitação da documentação via Swagger.
+
 🏷️ v1.0.0 — Release Estável (Gold)
 Marco de finalização do projeto, elevando o nível de maturidade da aplicação com a introdução de interface visual, otimização de performance e robustez no tratamento de erros.
 
@@ -169,6 +170,11 @@ Marco de finalização do projeto, elevando o nível de maturidade da aplicaçã
    * Motor de Cálculo Híbrido: Algoritmo resiliente que utiliza C para performance, com fallback automático para Python (garantindo compatibilidade entre Windows e Linux no CI).
    * QA Avançado: Ampliação da cobertura de testes, incluindo uso de Mocks para simulação de banco de dados e validação de casos de borda.
    * Controle e Rastreabilidade
+
+🏷️ v1.0.1 — Release de Correção
+Após o release final, foi identificado um ajuste necessário no workflow nightly do GitHub Actions para garantir compatibilidade e execução correta dos jobs em múltiplos sistemas operacionais.
+Esta versão corrige os nomes dos jobs do workflow (nightly-linux e nightly-windows), garantindo que o pipeline noturno continue funcionando conforme esperado.
+
 A gestão das versões foi realizada através de Tags anotadas no Git, vinculadas a Releases no GitHub. Cada lançamento foi acompanhado pela atualização do arquivo CHANGELOG.md (seguindo o padrão Keep a Changelog), garantindo total rastreabilidade entre o código entregue e as funcionalidades documentadas.
 
 ---
