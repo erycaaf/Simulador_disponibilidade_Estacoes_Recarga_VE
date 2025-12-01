@@ -194,6 +194,7 @@ Segue o padrão Keep a Changelog, registrando:
 
 **LICENSE**  
 Arquivo de licença MIT, garantindo liberdade de uso, modificação e distribuição do código, com as devidas permissões e limitações legais.
+
 ---
 
 
@@ -213,6 +214,7 @@ Durante o desenvolvimento do Simulador, diversas práticas de Engenharia de Soft
 - **Hospedagem Separada do Frontend:** A decisão de hospedar a interface web no GitHub Pages, separada do backend, trouxe flexibilidade e facilitou o acesso dos usuários, além de simplificar o deploy.
 
 Essas lições reforçam a importância de processos bem definidos, automação, documentação e colaboração para o desenvolvimento de sistemas confiáveis e escaláveis.
+
 ---
 
 ## 10. Reflexões individuais
