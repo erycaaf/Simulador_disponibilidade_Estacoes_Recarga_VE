@@ -175,11 +175,44 @@ A gestão das versões foi realizada através de Tags anotadas no Git, vinculada
 
 ##  8. Documentação
 
+A documentação do projeto foi estruturada para garantir clareza, rastreabilidade e facilidade de uso para desenvolvedores e avaliadores. Os principais arquivos são:
 
+**README.md**  
+Documento principal de orientação do usuário e desenvolvedor. Contém:
+- Descrição detalhada do sistema, objetivos e arquitetura (API, módulo de simulação em C, interface web e scripts auxiliares).
+- Passo a passo para rodar localmente em Windows e Linux, incluindo instruções para compilar o módulo C e executar o backend.
+- Orientações para rodar o backend via Docker e Docker Compose, facilitando a execução multiplataforma e reprodutível.
+- Instruções para executar testes automatizados com pytest e visualizar logs/cobertura.
+- Explicação sobre a documentação interativa da API (Swagger/OpenAPI), acessível via `/docs`, `/redoc` e `/openapi.json`.
+- Lista dos endpoints reais do sistema, com parâmetros, retornos, status codes e comportamento esperado.
+- Link para acesso à interface web hospedada no GitHub Pages.
+
+**CHANGELOG.md**  
+Segue o padrão Keep a Changelog, registrando:
+- Funcionalidades adicionadas, alterações relevantes, correções de bugs, mudanças estruturais na API e no pipeline CI/CD.
+- Permite rastrear claramente a evolução do projeto, relacionando cada mudança às respectivas branches e PRs.
+
+**LICENSE**  
+Arquivo de licença MIT, garantindo liberdade de uso, modificação e distribuição do código, com as devidas permissões e limitações legais.
 ---
+
 
 ## 9. Lições aprendidas
 
+Durante o desenvolvimento do Simulador, diversas práticas de Engenharia de Software e SCM foram aplicadas e avaliadas na prática. As principais lições aprendidas incluem:
+
+- **Estratégia de Branching e Fluxo Git:** A adoção do modelo feature → develop → main trouxe organização, previsibilidade e facilitou a colaboração simultânea. O uso disciplinado de branches específicas para cada funcionalidade ou correção reduziu conflitos e tornou os merges mais seguros.
+- **Gestão de Issues, Labels e Pull Requests:** O registro detalhado de tarefas, uso de labels e templates de PR garantiu rastreabilidade completa, permitindo acompanhar o histórico de decisões, responsáveis e etapas de implementação. Automatizações nos PRs e integração com o GitHub Projects tornaram o fluxo mais eficiente.
+- **Padronização do Ambiente com Docker e Docker Compose:** A criação de Dockerfile e docker-compose.yml eliminou problemas de ambiente, tornando a execução multiplataforma simples e reprodutível. Todos os membros puderam rodar o backend e validar o simulador sem dificuldades, independentemente do sistema operacional.
+- **Integração Contínua (CI/CD):** A configuração de pipelines no GitHub Actions permitiu detectar erros rapidamente, validar builds em múltiplos sistemas (Windows e Linux) e garantir que cada alteração estivesse testada antes do merge. O uso de testes automatizados e linting reforçou a qualidade do código.
+- **Automação de Build Multiplataforma:** O Makefile foi adaptado para suportar tanto MSVC (Windows) quanto GCC (Linux), integrando o módulo C ao backend Python e facilitando o desenvolvimento e testes em diferentes ambientes.
+- **Divisão de Papéis e Colaboração:** A alternância de funções entre configuração, desenvolvimento, testes e CI aumentou o entendimento coletivo do ciclo de SCM, reforçando a importância da comunicação e colaboração para o sucesso do projeto.
+- **Revisão de Código e Qualidade:** O processo de code review foi fundamental para manter padrões, evitar bugs acidentais e promover aprendizado entre os membros.
+- **Documentação Clara e Estruturada:** A documentação detalhada (README, CHANGELOG, templates) facilitou tanto o onboarding de novos membros quanto a entrega acadêmica, tornando o projeto acessível e fácil de validar.
+- **Aprendizado sobre Integração de Módulos:** A experiência de integrar componentes em C ao backend Python, com fallback automático, ampliou o domínio sobre interoperabilidade e práticas de desenvolvimento robusto.
+- **Hospedagem Separada do Frontend:** A decisão de hospedar a interface web no GitHub Pages, separada do backend, trouxe flexibilidade e facilitou o acesso dos usuários, além de simplificar o deploy.
+
+Essas lições reforçam a importância de processos bem definidos, automação, documentação e colaboração para o desenvolvimento de sistemas confiáveis e escaláveis.
 ---
 
 ## 10. Reflexões individuais
@@ -197,6 +230,15 @@ Por fim, trabalhar com Rian e Renato foi extremamente positivo. Eles foram proat
 
 ### Renato
 
+Apesar de já ter bastante experiência em desenvolvimento de software, este projeto foi marcante por me colocar diante de práticas que, até então, eu não costumava priorizar antes de começar a codar. Sempre fui muito focado em implementar soluções técnicas, mas aqui precisei desacelerar e pensar no planejamento: discutir com o time, estruturar as issues, definir a estratégia de branches e combinar padrões de commits e testes antes de qualquer linha de código.
+
+Foi a primeira vez que participei ativamente de um processo onde o versionamento, a rastreabilidade e a colaboração eram pensados desde o início, e não apenas como uma etapa posterior. Aprendi o valor de alinhar expectativas, dividir tarefas e garantir que todos estivessem na mesma página antes de partir para a implementação. Isso trouxe uma organização e previsibilidade que raramente experimentei em outros projetos.
+
+No aspecto técnico, pude contribuir com a integração entre Python e C, adaptando o Makefile para suportar Windows e Linux, e ajustando o Dockerfile e o docker-compose.yml para facilitar o uso do backend por toda a equipe. Também ajudei a configurar o pipeline de CI/CD no GitHub Actions, garantindo que os testes e builds fossem automáticos e multiplataforma.
+
+Além disso, participar das discussões sobre documentação, onboarding e acesso ao frontend me fez perceber como esses detalhes impactam diretamente a experiência dos colegas e dos usuários. O ambiente colaborativo com Eryca e Rian foi fundamental para que eu pudesse aprender e compartilhar, tornando o trabalho mais leve e produtivo.
+
+No fim, este projeto me ensinou que planejar, documentar e discutir antes de codar é tão importante quanto a implementação em si. Sair do automático e pensar no coletivo foi um desafio e, ao mesmo tempo, um grande aprendizado para minha trajetória como desenvolvedor.
 
 ### Rian
 Esta disciplina foi um divisor de águas na minha formação, proporcionando minha primeira experiência aprofundada em gerenciamento de projetos de software. Foi fundamental para que eu pudesse aprender na prática sobre Git, GitHub e todo o ciclo de vida de desenvolvimento.
