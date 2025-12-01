@@ -3,6 +3,12 @@ Todas as mudanças importantes neste projeto serão documentadas neste arquivo.
 
 O formato segue as recomendações do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) e este projeto adota o versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [v1.0.1] - 2025-11-30
+### Corrigido
+- Ajuste nos nomes dos jobs do workflow nightly (`nightly_linux` e `nightly_windows`) para garantir compatibilidade e execução correta dos pipelines noturnos no GitHub Actions.
+
+---
+
 ## [v1.0.0] - 2025-11-30
 ### Adicionado
 - **Interface Gráfica (GUI):** Nova camada visual para facilitar o uso do simulador.
